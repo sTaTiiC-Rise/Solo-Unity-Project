@@ -12,6 +12,7 @@ public class CameraRotation : MonoBehaviour
         float h = horizontalSpeed * Input.GetAxis("Mouse X");
         float v = verticalSpeed * Input.GetAxis("Mouse Y");
 
-        transform.Rotate(v, h, -1);
+        transform.Rotate(v, h, 0);
+        
     }
 }
