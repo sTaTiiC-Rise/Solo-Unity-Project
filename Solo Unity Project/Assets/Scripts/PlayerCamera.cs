@@ -8,9 +8,9 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float v = Speed * Input.GetAxis("Mouse X");
+        float v = Speed * Input.GetAxis("Mouse Y");
 
-        transform.Rotate(0, -v, 0);
+        transform.Rotate(v, 0, 0);
 
     }
 }

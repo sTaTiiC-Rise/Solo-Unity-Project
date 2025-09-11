@@ -1,0 +1,86 @@
+using System.Threading;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerMovement : MonoBehaviour
+{
+    Vector2 cameraRotation;
+    InputAction lookVector;
+    Camera playerCam;
+    Rigidbody rb;
+    Transform camHolder;
+
+    float verticalMove;
+    float horizontalMove;
+
+    public float speed = 5f;
+    public float jumpHeight = 10f;
+    public float Xsensitivity = 1.0f;
+    public float Ysensitivity = 1.0f;
+    public float camRotationLimit = 90.0f;
+    public bool locked = true;
+
+    public void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        playerCam = Camera.main;
+        lookVector = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
+        cameraRotation = Vector2.zero;
+        camHolder = transform.GetChild(0);
+
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Update()
+    {
+        //Camera Rotation System
+        playerCam.transform.position = camHolder.position;
+        cameraRotation.x += lookVector.ReadValue<Vector2>().x * Xsensitivity;
+        cameraRotation.y += lookVector.ReadValue<Vector2>().y * Ysensitivity;
+
+        cameraRotation.y = Mathf.Clamp(cameraRotation.y, -camRotationLimit, camRotationLimit);
+
+        playerCam.transform.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
+        transform.localRotation = Quaternion.AngleAxis(cameraRotation.x, Vector3.up);
+
+        //movement system
+        Vector3 temp = rb.linearVelocity;
+
+        temp.x = verticalMove * speed;
+        temp.z = horizontalMove * speed;
+
+        rb.linearVelocity = (temp.x * transform.forward) +
+                            (temp.y * transform.up) +
+                            (temp.z * transform.right);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (locked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                locked = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                locked = true;
+            }
+
+
+        }
+
+        //Jump
+        if (Input.GetKeyDown("space"))
+        {
+            rb.AddForce(jumpHeight * transform.up * 10);
+        }
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        Vector2 inputAxis = context.ReadValue<Vector2>();
+
+        verticalMove = inputAxis.y;
+        horizontalMove = inputAxis.x;
+    }
+}

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
-    float Speed = -2.0f;
+    float verticalSpeed = -2.0f;
     // Update is called once per frame
     void Update()
     {
-        float v = Speed * Input.GetAxis("Mouse Y");
+        float v = verticalSpeed * Input.GetAxis("Mouse X");
 
-        transform.Rotate(v, 0, 0);
+        transform.Rotate(0, -v, 0);
         
     }
 }
