@@ -1,12 +1,14 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
     Vector2 cameraRotation;
+    Vector3 cameraOffSet;
     InputAction lookVector;
-    Camera playerCam;
+    Transform playerCam;
     Rigidbody rb;
     Transform camHolder;
 
@@ -14,16 +16,19 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMove;
 
     public float speed = 5f;
-    public float jumpHeight = 10f;
+    public float jumpHeight = 50f;
     public float Xsensitivity = 1.0f;
     public float Ysensitivity = 1.0f;
     public float camRotationLimit = 90.0f;
     public bool locked = true;
+    public int health = 5;
+    public int maxHealth = 5;
 
     public void Start()
     {
+        cameraOffSet = new Vector3(0, .7f, .4f);
         rb = GetComponent<Rigidbody>();
-        playerCam = Camera.main;
+        playerCam = transform.GetChild(0);
         lookVector = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
         cameraRotation = Vector2.zero;
         camHolder = transform.GetChild(0);
@@ -33,14 +38,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (health <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+
         //Camera Rotation System
-        playerCam.transform.position = camHolder.position;
+        //playerCam.transform.position = camHolder.position;
         cameraRotation.x += lookVector.ReadValue<Vector2>().x * Xsensitivity;
         cameraRotation.y += lookVector.ReadValue<Vector2>().y * Ysensitivity;
 
         cameraRotation.y = Mathf.Clamp(cameraRotation.y, -camRotationLimit, camRotationLimit);
 
-        playerCam.transform.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
+        playerCam.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
         transform.localRotation = Quaternion.AngleAxis(cameraRotation.x, Vector3.up);
 
         //movement system
@@ -82,5 +93,11 @@ public class PlayerMovement : MonoBehaviour
 
         verticalMove = inputAxis.y;
         horizontalMove = inputAxis.x;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "deathBox")
+            health = 0;
     }
 }
