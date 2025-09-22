@@ -100,4 +100,9 @@ public class PlayerMovement : MonoBehaviour
         if (other.tag == "deathBox")
             health = 0;
     }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "enemy")
+            health = health - 1;
+    }
 }
