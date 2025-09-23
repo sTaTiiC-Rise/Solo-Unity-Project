@@ -11,12 +11,20 @@ public class PlayerMovement : MonoBehaviour
     Transform playerCam;
     Rigidbody rb;
     Transform camHolder;
+    Ray jumpRay;
+    Ray interactRay;
+    RaycastHit interactHit;
+    GameObject pickupObj;
+    public PlayerInput input;
+    public Transform weaponSlot;
+    public Weapon currentWeapon;
 
     float verticalMove;
     float horizontalMove;
 
     public float speed = 5f;
     public float jumpHeight = 50f;
+    public float interactDistance = 1f;
     public float Xsensitivity = 1.0f;
     public float Ysensitivity = 1.0f;
     public float camRotationLimit = 90.0f;
@@ -26,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void Start()
     {
+        input = GetComponent<PlayerInput>();
+        jumpRay = new Ray(transform.position, -transform.up);
+        interactRay = new Ray(transform.position, transform.forward);
         cameraOffSet = new Vector3(0, .7f, .4f);
         rb = GetComponent<Rigidbody>();
         playerCam = transform.GetChild(0);
@@ -41,6 +52,15 @@ public class PlayerMovement : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            interactRay.origin = transform.position;
+            interactRay.direction = playerCam.transform.forward;
+
+            if (Physics.Raycast(interactRay, out interactHit, interactDistance))
+            {
+                if (interactHit.collider.gameObject.tag == "weapon") ;
+
+            }
         }
 
 
@@ -104,5 +124,27 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "enemy")
             health = health - 1;
+    }
+    public void Attack()
+    {
+        if(currentWeapon)
+        {
+            currentWeapon.fire();
+        }
+    }
+    public void Interact()
+    {
+        if (pickupObj)
+        {
+            if (pickupObj.tag == "weapon")
+                pickupObj.GetComponent<Weapon>().equip(this);
+        }
+    }
+    public void DropWeapon()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.GetComponent<Weapon>().unequip();
+        }
     }
 }
