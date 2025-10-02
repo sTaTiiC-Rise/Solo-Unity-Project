@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Weapon : MonoBehaviour
 {
-    PlayerMovement player;
+    public PlayerMovement player;
 
     public GameObject projectile;
     public AudioSource weaponSpeaker;
@@ -51,6 +51,15 @@ public class Weapon : MonoBehaviour
             canFire = false;
             StartCoroutine("cooldownFire", rof);
         }
+
+        else if (canFire && weaponID <= -1)
+        {
+            weaponSpeaker.Play();
+            GameObject p = Instantiate(projectile, firePoint);
+            Destroy(p, projLifespan);
+            canFire = false;
+            StartCoroutine("cooldownFire", rof);
+        }
     }
 
     public void reload()
@@ -87,7 +96,7 @@ public class Weapon : MonoBehaviour
         transform.SetParent(player.weaponSlot);
 
         GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Collider>().isTrigger = true;
+        GetComponent<Collider>().enabled = false;
 
         firingDirection = Camera.main;
         this.player = player;
@@ -100,7 +109,7 @@ public class Weapon : MonoBehaviour
         transform.SetParent(null);
 
         GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Collider>().isTrigger = false;
+        GetComponent<Collider>().enabled = true;
 
         firingDirection = null;
         this.player = null;
@@ -110,7 +119,7 @@ public class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(cooldownTime);
         
-        if(clip > 0)
+        if(clip > 0 || weaponID <= -1)
             canFire = true;
     }
 }

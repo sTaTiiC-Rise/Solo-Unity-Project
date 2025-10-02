@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     public float Ysensitivity = 1.0f;
     public float camRotationLimit = 90.0f;
     public bool locked = true;
+    public bool attacking = false;
     public int health = 5;
     public int maxHealth = 5;
 
@@ -36,13 +37,14 @@ public class PlayerMovement : MonoBehaviour
     {
         input = GetComponent<PlayerInput>();
         jumpRay = new Ray(transform.position, -transform.up);
-        interactRay = new Ray(transform.position, transform.forward);
         cameraOffSet = new Vector3(0, .7f, .4f);
         rb = GetComponent<Rigidbody>();
-        playerCam = transform.GetChild(0);
+        playerCam = Camera.main.transform;
+        interactRay = new Ray(playerCam.transform.position, playerCam.transform.forward);
         lookVector = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
         cameraRotation = Vector2.zero;
         camHolder = transform.GetChild(0);
+        weaponSlot = playerCam.transform.GetChild(0);
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -52,27 +54,14 @@ public class PlayerMovement : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-            interactRay.origin = transform.position;
-            interactRay.direction = playerCam.transform.forward;
-
-            if (Physics.Raycast(interactRay, out interactHit, interactDistance))
-            {
-                if (interactHit.collider.gameObject.tag == "weapon") ;
-
-            }
         }
 
+        Quaternion playerRotation = playerCam.transform.rotation;
 
-        //Camera Rotation System
-        //playerCam.transform.position = camHolder.position;
-        cameraRotation.x += lookVector.ReadValue<Vector2>().x * Xsensitivity;
-        cameraRotation.y += lookVector.ReadValue<Vector2>().y * Ysensitivity;
+        playerRotation.x = 0;
+        playerRotation.z = 0;
 
-        cameraRotation.y = Mathf.Clamp(cameraRotation.y, -camRotationLimit, camRotationLimit);
-
-        playerCam.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
-        transform.localRotation = Quaternion.AngleAxis(cameraRotation.x, Vector3.up);
+        transform.localRotation = playerRotation;
 
         //movement system
         Vector3 temp = rb.linearVelocity;
@@ -83,6 +72,21 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = (temp.x * transform.forward) +
                             (temp.y * transform.up) +
                             (temp.z * transform.right);
+
+        interactRay.origin = playerCam.transform.position;
+        interactRay.direction = playerCam.transform.forward;
+
+        if (Physics.Raycast(interactRay, out interactHit, interactDistance))
+        {
+            if (interactHit.collider.gameObject.tag == "weapon")
+            {
+                pickupObj = interactHit.collider.gameObject;
+
+                Debug.Log("SEEN");
+            }
+        }
+        else
+            pickupObj = null;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -130,6 +134,8 @@ public class PlayerMovement : MonoBehaviour
         if(currentWeapon)
         {
             currentWeapon.fire();
+
+            attacking = true;
         }
     }
     public void Interact()

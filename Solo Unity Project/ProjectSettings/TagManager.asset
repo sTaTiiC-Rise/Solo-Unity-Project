@@ -9,6 +9,8 @@ TagManager:
   - weapon
   - ui_health
   - pause
+  - attack
+  - proj
   layers:
   - Default
   - TransparentFX
