@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class Weapon : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Weapon : MonoBehaviour
     public string weaponName;
 
     [Header("Weapon Stats")]
+    public float damage;
     public float projLifespan;
     public float projVelocity;
     public float reloadCooldown;

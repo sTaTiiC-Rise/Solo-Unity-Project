@@ -5,6 +5,8 @@ public class BasicEnemyController : MonoBehaviour
 {
     NavMeshAgent agent;
 
+    public int health = 2;
+    public int maxHealth = 2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,5 +18,18 @@ public class BasicEnemyController : MonoBehaviour
     void Update()
     {
         agent.destination = GameObject.Find("Player").transform.position;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "proj")
+        {
+            health--;
+            Destroy(collision.gameObject);
+        }
     }
 }
