@@ -11,6 +11,7 @@ TagManager:
   - pause
   - attack
   - proj
+  - spawnPoint
   layers:
   - Default
   - TransparentFX

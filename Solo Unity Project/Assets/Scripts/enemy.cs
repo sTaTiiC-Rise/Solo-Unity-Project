@@ -24,12 +24,12 @@ public class BasicEnemyController : MonoBehaviour
         }
 
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter (Collider collision)
     {
-        if (collision.gameObject.tag == "proj")
+        if (collision.gameObject.tag == "attack")
         {
             health--;
-            Destroy(collision.gameObject);
+            Debug.Log("hit");
         }
     }
 }
