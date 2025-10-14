@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class BasicEnemyController : MonoBehaviour
 {
     NavMeshAgent agent;
+    Animator myAnim;
 
     public int health = 2;
     public int maxHealth = 2;
@@ -11,6 +12,7 @@ public class BasicEnemyController : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        myAnim = GetComponent<Animator>();
 
     }
 
@@ -22,6 +24,19 @@ public class BasicEnemyController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        /*else
+        {
+            if (isFollowing)
+            {
+                myAnim.SetBool("isAttacking", true);
+            }
+            else
+            {
+                agent.isStopped = true;
+                myAnim.SetBool("isAttacking", false);
+            }
+        }*/
 
     }
     private void OnTriggerEnter (Collider collision)
