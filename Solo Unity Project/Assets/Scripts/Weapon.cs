@@ -104,17 +104,17 @@ public class Weapon : MonoBehaviour
         this.player = player;
     }
 
-    public void unequip()
+    public void unequip() //im rubbing peanut butter on my cock
     {
         player.currentWeapon = null;
-        
+
         transform.SetParent(null);
 
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<Collider>().enabled = true;
 
         firingDirection = null;
-        this.player = null;
+                this.player = null;
     }
 
     IEnumerator cooldownFire(float cooldownTime)
