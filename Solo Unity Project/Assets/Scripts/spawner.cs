@@ -39,14 +39,14 @@ public class spawner : MonoBehaviour
         isDelaying = true;
         Debug.Log("Spawned");
         yield return new WaitForSeconds(delayTime);
-        if (delayTime >= 0.1)
+        if (delayTime >= 0.5)
         {
             delayTime -= delayIncrement;
-            delayIncrement += 0.5f;
+            delayIncrement += 0.1f;
         }
         else
         {
-            delayTime = 0.1f;
+            delayTime = 1f;
         }
 
             isDelaying = false;
