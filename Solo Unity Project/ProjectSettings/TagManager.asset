@@ -12,6 +12,7 @@ TagManager:
   - attack
   - proj
   - spawnPoint
+  - loseScreen
   layers:
   - Default
   - TransparentFX

@@ -11,10 +11,12 @@ public class GameManager : MonoBehaviour
 
     GameObject PauseMenu;
     public bool isPaused = false;
+    GameObject loseScreen;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Time.timeScale = 1;
         if (SceneManager.GetActiveScene().buildIndex >= 1)
         {
             healthBar = GameObject.FindGameObjectWithTag("ui_health").GetComponent<Image>();
@@ -22,6 +24,8 @@ public class GameManager : MonoBehaviour
 
             PauseMenu = GameObject.FindGameObjectWithTag("pause");
             PauseMenu.SetActive(false);
+            loseScreen = GameObject.FindGameObjectWithTag("loseScreen");
+            loseScreen.SetActive(false);
         }
     }
 
@@ -34,6 +38,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public void Slain()
+    {
+        loseScreen.SetActive(true);
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Debug.Log("Slain");
+    }
     public void Pause()
     {
         if (!isPaused)

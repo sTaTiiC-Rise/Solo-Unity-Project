@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameManager GameManager;
     Vector2 cameraRotation;
     Vector3 cameraOffSet;
     InputAction lookVector;
@@ -53,7 +54,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (health <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.Slain();
         }
 
         Quaternion playerRotation = playerCam.transform.rotation;
