@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float speed = 5f;
     public float jumpHeight = 50f;
+    public float groundDetectLength = .5f;
     public float interactDistance = 1f;
     public float Xsensitivity = 1.0f;
     public float Ysensitivity = 1.0f;
@@ -102,15 +103,16 @@ public class PlayerMovement : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 locked = true;
             }
-
-
+            if (Input.GetKeyDown(KeyCode.Space))
+                Jump();
         }
+    }
 
         //Jump
-        if (Input.GetKeyDown("space"))
-        {
-            rb.AddForce(jumpHeight * transform.up * 10);
-        }
+        public void Jump()
+    {
+        if (Physics.Raycast(jumpRay, groundDetectLength))
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
     }
 
     public void Move(InputAction.CallbackContext context)
