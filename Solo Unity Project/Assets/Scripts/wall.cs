@@ -34,7 +34,7 @@ public class wall : MonoBehaviour
     }
     private IEnumerator weight()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         dontPlace = false;
     }
 }
