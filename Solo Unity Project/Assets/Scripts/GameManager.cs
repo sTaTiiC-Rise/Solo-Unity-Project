@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         {
             healthBar = GameObject.FindGameObjectWithTag("ui_health").GetComponent<Image>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-
+            
             PauseMenu = GameObject.FindGameObjectWithTag("pause");
             PauseMenu.SetActive(false);
             loseScreen = GameObject.FindGameObjectWithTag("loseScreen");
